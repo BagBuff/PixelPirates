@@ -3,10 +3,11 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import GUI from 'lil-gui'
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'
+import { Sky } from 'three/addons/objects/Sky.js';
 
-
-const matcapTexture = new THREE.TextureLoader().load('/textures/matcaps/9.png')
-matcapTexture.colorSpace = THREE.SRGBColorSpace
+const tMatcap = new THREE.TextureLoader().load('/textures/matcaps/matcap.png')
+const tStar = new THREE.TextureLoader().load('/textures/matcaps/star.png')
+tMatcap.colorSpace = THREE.SRGBColorSpace
 
 const fontLoader = new FontLoader()
 
@@ -44,7 +45,7 @@ fontLoader.load('/fonts/arcade_regular.typeface.json', (fontRegular) => {
 
     // Create materials
     const material = new THREE.MeshMatcapMaterial({
-        matcap: matcapTexture,
+        matcap: tMatcap,
     })
 
     // Create meshes
@@ -60,25 +61,50 @@ fontLoader.load('/fonts/arcade_regular.typeface.json', (fontRegular) => {
     scene.add(textPirates)
 })
 
-const dotGeometry = new THREE.SphereGeometry(.05, 16, 16)
-const dotMaterial = new THREE.PointsMaterial({
-    color: '#f0be8d',
-})
+// const dotGeometry = new THREE.SphereGeometry(.05, 16, 16)
+// const dotMaterial = new THREE.PointsMaterial({
+//     color: '#f0be8d',
+// })
 
-for (let i = 0; i < 1000; i++) {
-    const dot = new THREE.Mesh(dotGeometry, dotMaterial)
-    dot.position.x = (Math.random() - 0.5) * 100
-    dot.position.y = (Math.random() - 0.5) * 100
-    dot.position.z = (Math.random() - 0.5) * 100
+// for (let i = 0; i < 1000; i++) {
+//     const dot = new THREE.Mesh(dotGeometry, dotMaterial)
+//     dot.position.x = (Math.random() - 0.5) * 100
+//     dot.position.y = (Math.random() - 0.5) * 100
+//     dot.position.z = (Math.random() - 0.5) * 100
 
-    dot.rotation.x = Math.random() * Math.PI
-    dot.rotation.y = Math.random() * Math.PI
+//     dot.rotation.x = Math.random() * Math.PI
+//     dot.rotation.y = Math.random() * Math.PI
 
-    const scale = Math.random()
-    dot.scale.set(scale, scale, scale)
+//     const scale = Math.random()
+//     dot.scale.set(scale, scale, scale)
 
-    scene.add(dot)
+//     scene.add(dot)
+// }
+
+// Stars
+const starsGeometry = new THREE.BufferGeometry()
+const count = 1000
+
+const positions = new Float32Array(count * 3)
+
+for(let i = 0; i < count * 3; i++) {
+    positions[i] = (Math.random() - 0.5) * 100
 }
+
+starsGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+
+const starsMaterial = new THREE.PointsMaterial({
+    size: 0.1,
+    sizeAttenuation: true,
+    transparent: true,
+    alphaMap: tStar,
+    depthWrite: false,
+    color: '#fcefc3',
+})
+const stars = new THREE.Points(starsGeometry, starsMaterial)
+scene.add(stars)
+stars.position.y = -6
+// End of Stars
 
 // Debug
 // const gui = new GUI()
