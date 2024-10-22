@@ -81,6 +81,11 @@ fontLoader.load('/fonts/arcade_regular.typeface.json', (fontRegular) => {
 //     scene.add(dot)
 // }
 
+// utility to generate random values between two values
+const getRandomInRange = (min, max) => {
+    return Math.random() * (max - min) + min
+}
+
 // Stars
 const starsGeometry = new THREE.BufferGeometry()
 const count = 1000
@@ -88,13 +93,13 @@ const count = 1000
 const positions = new Float32Array(count * 3)
 
 for(let i = 0; i < count * 3; i++) {
-    positions[i] = (Math.random() - 0.5) * 100
+    positions[i] = getRandomInRange(-15, 15)
 }
 
 starsGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
 
 const starsMaterial = new THREE.PointsMaterial({
-    size: 0.1,
+    size: getRandomInRange(0.1, 0.3),
     sizeAttenuation: true,
     transparent: true,
     alphaMap: tStar,
